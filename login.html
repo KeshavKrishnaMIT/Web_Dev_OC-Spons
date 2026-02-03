@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - OC Timetable Pro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-circles"></div>
+    <div class="container">
+        <div class="box">
+            <header>
+                <h2 id="authTitle">System Login</h2>
+                <p id="authDesc">Enter details to access your dashboard</p>
+            </header>
+            
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="user" placeholder="Username" autocomplete="off">
+            </div>
+            
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="pass" placeholder="Password" autocomplete="new-password">
+            </div>
+            
+            <div id="loginActions">
+                <button onclick="handleLogin()" class="btn-show">Login</button>
+                <div class="auth-footer">
+                    <p>New user? <a href="#" onclick="toggleAuth(true)">Create an account</a></p>
+                </div>
+            </div>
+
+            <div id="registerActions" style="display: none;">
+                <button onclick="handleRegister()" class="btn-show" style="background: #4f46e5;">Register Account</button>
+                <div class="auth-footer">
+                    <p>Ready to enter? <a href="#" onclick="toggleAuth(false)">Back to Login</a></p>
+                </div>
+            </div>
+            
+            <p id="authMsg" style="font-size: 13px; margin-top: 15px; text-align: center; min-height: 15px; font-weight: 600;"></p>
+        </div>
+    </div>
+
+    <script>
+        function toggleAuth(isRegistering) {
+            const title = document.getElementById('authTitle');
+            const desc = document.getElementById('authDesc');
+            const loginBox = document.getElementById('loginActions');
+            const registerBox = document.getElementById('registerActions');
+            const msg = document.getElementById('authMsg');
+            msg.innerText = ""; 
+            
+            if (isRegistering) {
+                title.innerText = "Create Account";
+                desc.innerText = "Save credentials to this browser";
+                loginBox.style.display = "none";
+                registerBox.style.display = "block";
+            } else {
+                title.innerText = "System Login";
+                desc.innerText = "Enter details to access your dashboard";
+                loginBox.style.display = "block";
+                registerBox.style.display = "none";
+            }
+        }
+
+        function handleRegister() {
+            const u = document.getElementById('user').value.trim();
+            const p = document.getElementById('pass').value.trim();
+            const msg = document.getElementById('authMsg');
+
+            if (u && p) {
+                localStorage.setItem('oc_username', u);
+                localStorage.setItem('oc_password', p);
+                msg.innerText = "Registration successful! Click 'Back to Login' below.";
+                msg.style.color = "#4ade80";
+                // NO REDIRECT HERE - user clicks manually
+            } else {
+                msg.innerText = "Please fill in all fields.";
+                msg.style.color = "#ef4444";
+            }
+        }
+
+        function handleLogin() {
+            const u = document.getElementById('user').value.trim();
+            const p = document.getElementById('pass').value.trim();
+            const storedU = localStorage.getItem('oc_username');
+            const storedP = localStorage.getItem('oc_password');
+
+            if (u === storedU && p === storedP && u !== null) {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                window.location.href = "index.html";
+            } else {
+                const msg = document.getElementById('authMsg');
+                msg.innerText = "Invalid credentials. Register first!";
+                msg.style.color = "#ef4444";
+            }
+        }
+    </script>
+</body>
+</html>

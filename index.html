@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OC Timetable Pro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-circles"></div>
+    <div class="container">
+        <div class="box">
+            <header>
+                <h2>OC Timetable</h2>
+                <p>Select a student and day to view the schedule</p>
+            </header>
+
+            <div class="input-group">
+    <label for="ocName">Student Name</label>
+    <select id="ocName" class="modern-select">
+        <option value="" disabled selected>Choose a student...</option>
+        </select>
+</div>
+
+<div class="input-group">
+    <label for="day">Day of Week</label>
+    <select id="day" class="modern-select">
+        <option value="" disabled selected>Select day...</option>
+        <option value="Monday">Monday</option>
+        <option value="Tuesday">Tuesday</option>
+        <option value="Wednesday">Wednesday</option>
+        <option value="Thursday">Thursday</option>
+        <option value="Friday">Friday</option>
+        <option value="Saturday">Saturday</option>
+    </select>
+</div>
+
+            <button onclick="showTimetable()" class="btn-show">Check Schedule</button>
+
+            <div id="result" class="result-container"></div>
+
+            <div class="auth-footer" style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                <button onclick="logout()" class="btn-logout">Logout from Session</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>
