@@ -1,67 +1,127 @@
 /* --- NIRVAAH REVELS '26 THEME --- */
 :root {
-    --primary: #006a6a;        /* Deep Nirvaah Teal */
-    --primary-hover: #008b8b;  /* Brighter Flow Teal */
-    --accent: #d4af37;         /* Elegant Gold */
-    --bg-dark: #081414;        /* Main Background Depth */
-    --glass: rgba(233, 226, 208, 0.12); 
-    --text-cream: #e9e2d0;     /* Brochure Cream Text */
+    --primary: #006a6a;
+    --primary-hover: #008b8b;
+    --accent: #d4af37;
+    --bg-dark: #081414;
+    --glass: rgba(233, 226, 208, 0.12);
+    --text-cream: #e9e2d0;
     --input-bg: rgba(0, 0, 0, 0.5);
 }
 
 body {
-    margin: 0; padding: 0;
+    margin: 0;
+    padding: 0;
     font-family: 'Inter', sans-serif;
     background-color: var(--bg-dark);
     color: var(--text-cream);
-    display: flex; justify-content: center; align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     min-height: 100vh;
     overflow-x: hidden;
 }
 
-/* Background gradient matching the brochure's Flow of Creation */
+/* Background */
 .background-circles {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
     background: radial-gradient(circle at 15% 20%, #004d4d 0%, transparent 45%),
                 radial-gradient(circle at 85% 80%, #002b2b 0%, transparent 45%);
     z-index: -1;
 }
 
-.container { width: 100%; max-width: 450px; padding: 20px; box-sizing: border-box; }
+/* ===== CONTAINER BIGGER (75% width feel) ===== */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    padding: 40px;
+    box-sizing: border-box;
+}
 
-/* Main Glass Card */
+/* ===== MAIN GLASS CARD ===== */
 .box {
     background: var(--glass);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
     border: 1px solid rgba(233, 226, 208, 0.2);
-    padding: 40px 35px; border-radius: 28px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    padding: 60px;
+    border-radius: 28px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+    width: 100%;
 }
 
-header h2 {
-    margin: 0; font-size: 30px; font-weight: 700;
+/* ===== SPLIT LAYOUT ===== */
+.split-layout {
+    display: flex;
+    gap: 80px;
+}
+
+.left-panel,
+.right-panel {
+    flex: 1;
+}
+
+.left-panel {
+    border-right: 1px solid rgba(233, 226, 208, 0.15);
+    padding-right: 50px;
+}
+
+.right-panel {
+    padding-left: 50px;
+}
+
+/* ===== HEADINGS ===== */
+header h2,
+.right-panel h2 {
+    margin: 0;
+    font-size: 34px;
+    font-weight: 700;
     background: linear-gradient(to right, #00cccc, var(--accent));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-header p { color: #a19d91; font-size: 14px; margin-top: 8px; margin-bottom: 30px; }
-
-.input-group { margin-bottom: 22px; position: relative; }
-.input-group label { 
-    display: block; font-size: 11px; font-weight: 700; 
-    color: var(--accent); margin-bottom: 8px; 
-    text-transform: uppercase; letter-spacing: 1px; 
+header p {
+    color: #a19d91;
+    font-size: 15px;
+    margin-top: 10px;
+    margin-bottom: 35px;
 }
 
-/* Input & Dropdown Styling - Restored to Gold Arrow on Right */
-input, .modern-select {
-    width: 100%; padding: 14px;
+/* ===== INPUTS ===== */
+.input-group {
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.input-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+input,
+.modern-select {
+    width: 100%;
+    padding: 16px;
     background: var(--input-bg);
     border: 1px solid rgba(233, 226, 208, 0.15);
-    border-radius: 14px; color: white; box-sizing: border-box;
-    font-size: 15px; outline: none; transition: 0.3s;
-    /* Custom Gold Arrow on the right side */
+    border-radius: 14px;
+    color: white;
+    box-sizing: border-box;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s;
+
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23d4af37'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 14px center;
@@ -69,46 +129,75 @@ input, .modern-select {
     padding-right: 45px;
 }
 
-input:focus, .modern-select:focus { 
-    border-color: var(--accent); 
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); 
+input:focus,
+.modern-select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 18px rgba(212, 175, 55, 0.25);
 }
 
-/* Fix for Dropdown List Colors */
-datalist, select option {
-    background-color: #0d1b1b !important; /* Forces dark background */
-    color: var(--text-cream) !important;
+select option {
+    background-color: #0d1b1b;
+    color: var(--text-cream);
 }
 
-/* Primary Button */
+/* ===== BUTTONS ===== */
 .btn-show {
-    width: 100%; padding: 16px; background: var(--primary); color: white;
-    border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; 
-    font-weight: 600; font-size: 15px; cursor: pointer; transition: 0.3s;
+    width: 100%;
+    padding: 18px;
+    background: var(--primary);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
 }
 
-.btn-show:hover { background: var(--primary-hover); transform: translateY(-2px); }
+.btn-show:hover {
+    background: var(--primary-hover);
+    transform: translateY(-3px);
+}
 
-/* Schedule Card Results */
+/* ===== RESULT CARDS ===== */
 .schedule-item {
-    background: rgba(255, 255, 255, 0.05); padding: 16px; 
-    border-radius: 14px; border-left: 5px solid var(--accent);
-    font-size: 14px; color: #f1f1f1; margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 16px;
+    border-radius: 14px;
+    border-left: 5px solid var(--accent);
+    font-size: 14px;
+    color: #f1f1f1;
+    margin-bottom: 10px;
 }
 
 .full-day-badge {
-    background: rgba(212, 175, 55, 0.15); color: var(--accent);
-    font-size: 10px; font-weight: 800; padding: 5px 10px; border-radius: 8px; 
-    display: inline-block; margin-bottom: 12px; border: 1px solid rgba(212, 175, 55, 0.3);
+    background: rgba(212, 175, 55, 0.15);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 6px 12px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
-/* Logout Footer */
-.btn-logout {
-    margin-top: 20px; background: rgba(239, 68, 68, 0.08); color: #ff5f5f;
-    border: 1px solid rgba(239, 68, 68, 0.2); padding: 10px; border-radius: 12px;
-    font-size: 13px; font-weight: 600; cursor: pointer; width: 100%;
-}
-.btn-logout:hover { background: #ef4444; color: white; }
+/* ===== RESPONSIVE ===== */
+@media (max-width: 950px) {
 
-.auth-footer p { color: #94a3b8; }
-.auth-footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
+    .split-layout {
+        flex-direction: column;
+        gap: 50px;
+    }
+
+    .left-panel {
+        border-right: none;
+        padding-right: 0;
+    }
+
+    .right-panel {
+        padding-left: 0;
+    }
+
+}
