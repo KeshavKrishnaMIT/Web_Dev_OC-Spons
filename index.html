@@ -2,49 +2,148 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OC Timetable Pro</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        .split-layout {
+            display: flex;
+            gap: 60px;
+        }
+
+        .left-panel,
+        .right-panel {
+            flex: 1;
+        }
+
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.75);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background: #111;
+            padding: 35px;
+            border-radius: 16px;
+            width: 550px;
+            max-height: 75vh;
+            overflow-y: auto;
+            color: white;
+        }
+
+        .popup-content span {
+            float: right;
+            cursor: pointer;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 900px) {
+            .split-layout {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
+
 <body>
+
     <div class="background-circles"></div>
+
     <div class="container">
-        <div class="box">
-            <header>
+        <div class="box split-layout">
+
+            <!-- LEFT SIDE -->
+            <div class="left-panel">
+
                 <h2>OC Timetable</h2>
                 <p>Select a student and day to view the schedule</p>
-            </header>
 
-            <div class="input-group">
-    <label for="ocName">Student Name</label>
-    <select id="ocName" class="modern-select">
-        <option value="" disabled selected>Choose a student...</option>
-        </select>
-</div>
+                <div class="input-group">
+                    <label for="ocName">Student Name</label>
+                    <select id="ocName" class="modern-select">
+                        <option value="" disabled selected>Choose a student...</option>
+                    </select>
+                </div>
 
-<div class="input-group">
-    <label for="day">Day of Week</label>
-    <select id="day" class="modern-select">
-        <option value="" disabled selected>Select day...</option>
-        <option value="Monday">Monday</option>
-        <option value="Tuesday">Tuesday</option>
-        <option value="Wednesday">Wednesday</option>
-        <option value="Thursday">Thursday</option>
-        <option value="Friday">Friday</option>
-        <option value="Saturday">Saturday</option>
-    </select>
-</div>
+                <div class="input-group">
+                    <label for="day">Day of Week</label>
+                    <select id="day" class="modern-select">
+                        <option value="" disabled selected>Select day...</option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                    </select>
+                </div>
 
-            <button onclick="showTimetable()" class="btn-show">Check Schedule</button>
+                <button onclick="showTimetable()" class="btn-show">
+                    Check Schedule
+                </button>
 
-            <div id="result" class="result-container"></div>
-
-            <div class="auth-footer" style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
-                <button onclick="logout()" class="btn-logout">Logout from Session</button>
             </div>
+
+            <!-- RIGHT SIDE -->
+            <div class="right-panel">
+
+                <h2>Check Who Is Free</h2>
+
+                <!-- 24 Hour Instruction -->
+                <p style="font-size:14px; margin-bottom:12px; font-weight:500;">
+                    Please enter time in 24-hour format (HH:MM). Example: 14:30 for 2:30 PM.
+                </p>
+
+                <div class="input-group">
+                    <label for="rangeDay">Day</label>
+                    <select id="rangeDay" class="modern-select">
+                        <option value="" disabled selected>Select day...</option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="startTime">Start Time</label>
+                    <input type="time" id="startTime" class="modern-select">
+                </div>
+
+                <div class="input-group">
+                    <label for="endTime">End Time</label>
+                    <input type="time" id="endTime" class="modern-select">
+                </div>
+
+                <button onclick="showFreeOCsRange()" class="btn-show">
+                    Check Availability
+                </button>
+
+            </div>
+
         </div>
     </div>
+
+    <div id="popupModal" class="popup-overlay">
+        <div class="popup-content">
+            <span onclick="closePopup()">×</span>
+            <div id="popupBody"></div>
+        </div>
+    </div>
+
     <script src="js/script.js"></script>
+
 </body>
 </html>
