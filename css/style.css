@@ -201,3 +201,21 @@ select option {
     }
 
 }
+.auth-footer {
+    margin-top: 18px;
+    font-size: 15px;
+    text-align: center;
+}
+
+.create-link {
+    color: #00e6d0;
+    font-weight: 700;
+    text-decoration: none;
+    margin-left: 6px;
+    transition: 0.3s;
+}
+
+.create-link:hover {
+    color: #d4af37;
+    text-decoration: underline;
+}
