@@ -1,22 +1,326 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OC Timetable Pro</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
-        .split-layout {
+        /* ===== TOP BAR ===== */
+        .top-bar {
             display: flex;
-            gap: 60px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
-        .left-panel,
-        .right-panel {
+        .top-bar .user-info {
+            font-size: 14px;
+            color: #a19d91;
+        }
+
+        .top-bar .user-info strong {
+            color: var(--accent);
+        }
+
+        .btn-logout {
+            padding: 10px 20px;
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-allot {
+            padding: 10px 20px;
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--accent);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-allot:hover {
+            background: rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .top-bar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* ===== BADGE ===== */
+        .role-badge {
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .role-badge.cc {
+            background: rgba(74, 222, 128, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+
+        .role-badge.oc {
+            background: rgba(250, 204, 21, 0.15);
+            color: #facc15;
+            border: 1px solid rgba(250, 204, 21, 0.3);
+        }
+
+        /* ===== TIMETABLE SECTION ===== */
+        .timetable-section p.sub {
+            color: #a19d91;
+            font-size: 14px;
+            margin-top: 8px;
+            margin-bottom: 20px;
+        }
+
+        /* ===== TASK SECTION ===== */
+        .task-section {
+            margin-top: 36px;
+            padding-top: 28px;
+            border-top: 1px solid rgba(233, 226, 208, 0.12);
+        }
+
+        .task-section>p {
+            color: #a19d91;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        /* ===== EXPANDABLE TASK CARD ===== */
+        .task-card {
+            border-radius: 14px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .task-card.pending {
+            background: rgba(250, 204, 21, 0.06);
+            border: 1px solid rgba(250, 204, 21, 0.25);
+            border-left: 5px solid #facc15;
+        }
+
+        .task-card.completed {
+            background: rgba(74, 222, 128, 0.06);
+            border: 1px solid rgba(74, 222, 128, 0.25);
+            border-left: 5px solid #4ade80;
+        }
+
+        .task-card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        /* --- Collapsed Header Row --- */
+        .task-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 18px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .task-card-header .task-title {
             flex: 1;
+            min-width: 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: #f1f1f1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
+        .task-card-header .task-preview {
+            display: none;
+            font-size: 12px;
+            color: #888;
+            margin-left: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+
+        .task-card-header .task-chevron {
+            font-size: 14px;
+            color: #888;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .task-card.expanded .task-card-header .task-chevron {
+            transform: rotate(180deg);
+        }
+
+        /* --- Expanded Body --- */
+        .task-card-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+            padding: 0 18px;
+        }
+
+        .task-card.expanded .task-card-body {
+            max-height: 500px;
+            padding: 0 18px 18px 18px;
+        }
+
+        .task-card-body .task-description {
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border: 1px solid rgba(233, 226, 208, 0.06);
+        }
+
+        /* --- Metadata Grid --- */
+        .task-meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .task-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #a19d91;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+        }
+
+        .task-meta-item .meta-icon {
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .task-meta-item .meta-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #777;
+            display: block;
+        }
+
+        .task-meta-item .meta-value {
+            font-weight: 600;
+            color: #ddd;
+            display: block;
+        }
+
+        .task-meta-item .meta-value.accent {
+            color: #00cccc;
+        }
+
+        .task-meta-item .meta-value.gold {
+            color: #d4af37;
+        }
+
+        .task-meta-item .meta-value.danger {
+            color: #ef4444;
+        }
+
+        .task-meta-item .meta-value.success {
+            color: #4ade80;
+        }
+
+        /* --- Card Footer Actions --- */
+        .task-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(233, 226, 208, 0.08);
+        }
+
+        .task-status-badge {
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .task-status-badge.pending {
+            background: rgba(250, 204, 21, 0.15);
+            color: #facc15;
+            border: 1px solid rgba(250, 204, 21, 0.3);
+        }
+
+        .task-status-badge.completed {
+            background: rgba(74, 222, 128, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+
+        .btn-complete {
+            padding: 8px 16px;
+            background: rgba(74, 222, 128, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-complete:hover {
+            background: rgba(74, 222, 128, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .no-tasks {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* ===== POPUP ===== */
         .popup-overlay {
             display: none;
             position: fixed;
@@ -25,31 +329,341 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.75);
+            background: rgba(0, 0, 0, 0.75);
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
 
         .popup-content {
             background: #111;
-            padding: 35px;
+            padding: 30px;
             border-radius: 16px;
-            width: 550px;
+            width: 100%;
+            max-width: 550px;
             max-height: 75vh;
             overflow-y: auto;
             color: white;
         }
 
-        .popup-content span {
+        .popup-content span.close-btn {
             float: right;
             cursor: pointer;
             font-size: 22px;
             font-weight: bold;
         }
 
-        @media (max-width: 900px) {
-            .split-layout {
+        /* ===== TASK MODAL ===== */
+        .task-modal-overlay {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .task-modal {
+            background: #0d1b1b;
+            padding: 36px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 660px;
+            margin: 40px auto;
+            border: 1px solid rgba(233, 226, 208, 0.15);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .task-modal h2 {
+            margin: 0 0 6px 0;
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(to right, #00cccc, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .task-modal>p {
+            color: #a19d91;
+            font-size: 14px;
+            margin-bottom: 22px;
+        }
+
+        .modal-row {
+            display: flex;
+            gap: 14px;
+        }
+
+        .modal-row>.input-group {
+            flex: 1;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-assign {
+            background: var(--primary);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-assign:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.05);
+            color: #a19d91;
+            border: 1px solid rgba(233, 226, 208, 0.15);
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== OC CHECKBOX LIST ===== */
+        .oc-checklist {
+            margin-top: 14px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            border: 1px solid rgba(233, 226, 208, 0.08);
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .oc-checklist h4 {
+            margin: 0 0 10px 0;
+            color: var(--accent);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .oc-check-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            margin-bottom: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            transition: all 0.2s;
+            cursor: pointer;
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .oc-check-item:hover {
+            background: rgba(0, 106, 106, 0.15);
+        }
+
+        .oc-check-item.checked {
+            background: rgba(0, 106, 106, 0.2);
+            border: 1px solid rgba(0, 204, 204, 0.3);
+            color: #00cccc;
+        }
+
+        .oc-check-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #00cccc;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .oc-check-item .oc-status {
+            margin-left: auto;
+            font-size: 11px;
+            color: #4ade80;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* Selected tags */
+        .selected-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .selected-tag {
+            padding: 5px 12px;
+            background: rgba(0, 204, 204, 0.15);
+            color: #00cccc;
+            border: 1px solid rgba(0, 204, 204, 0.3);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .selected-tag .tag-remove {
+            cursor: pointer;
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        .selected-tag .tag-remove:hover {
+            opacity: 1;
+        }
+
+        .no-free-msg {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+            font-size: 13px;
+        }
+
+        /* ===== TASK TABS ===== */
+        .task-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 18px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(233, 226, 208, 0.12);
+        }
+
+        .task-tab {
+            flex: 1;
+            text-align: center;
+            padding: 11px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #a19d91;
+            background: rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .task-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .task-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ===== MOBILE RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .top-bar {
                 flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .top-bar-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .task-card-header {
+                padding: 14px 14px;
+            }
+
+            .task-card-header .task-title {
+                font-size: 14px;
+            }
+
+            .task-card-header .task-preview {
+                display: none !important;
+            }
+
+            .task-meta-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .task-card.expanded .task-card-body {
+                padding: 0 14px 14px 14px;
+            }
+
+            .task-card-footer {
+                flex-wrap: wrap;
+            }
+
+            .task-modal {
+                padding: 24px 18px;
+                margin: 16px auto;
+            }
+
+            .modal-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .task-modal h2 {
+                font-size: 20px;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .popup-content {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .btn-allot,
+            .btn-logout {
+                width: 100%;
+                text-align: center;
+            }
+
+            .top-bar-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .task-tabs {
+                border-radius: 10px;
+            }
+
+            .task-tab {
+                font-size: 12px;
+                padding: 9px;
+            }
+
+            .task-meta-item {
+                padding: 6px 10px;
+            }
+
+            .btn-complete {
+                width: 100%;
+                text-align: center;
+                padding: 12px;
             }
         }
     </style>
@@ -60,24 +674,38 @@
     <div class="background-circles"></div>
 
     <div class="container">
-        <div class="box split-layout">
+        <div class="box">
 
-            <!-- LEFT SIDE -->
-            <div class="left-panel">
+            <!-- TOP BAR -->
+            <div class="top-bar">
+                <div class="user-info">
+                    Logged in as <strong id="displayUser">User</strong>
+                    &nbsp;·&nbsp;
+                    <span id="displayRole" class="role-badge oc">OC</span>
+                </div>
+                <div class="top-bar-actions">
+                    <button id="btnAllotWork" class="btn-allot" onclick="openTaskModal()" style="display:none;">
+                        ✦ Allot Work
+                    </button>
+                    <button class="btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
 
+            <!-- TIMETABLE SECTION -->
+            <div class="timetable-section">
                 <h2>OC Timetable</h2>
-                <p>Select a student and day to view the schedule</p>
+                <p class="sub">Select a student and day to view their schedule</p>
 
                 <div class="input-group">
                     <label for="ocName">Student Name</label>
-                    <select id="ocName" class="modern-select">
+                    <select id="ocName">
                         <option value="" disabled selected>Choose a student...</option>
                     </select>
                 </div>
 
                 <div class="input-group">
                     <label for="day">Day of Week</label>
-                    <select id="day" class="modern-select">
+                    <select id="day">
                         <option value="" disabled selected>Select day...</option>
                         <option value="Monday">Monday</option>
                         <option value="Tuesday">Tuesday</option>
@@ -88,62 +716,118 @@
                     </select>
                 </div>
 
-                <button onclick="showTimetable()" class="btn-show">
-                    Check Schedule
-                </button>
-
+                <button onclick="showTimetable()" class="btn-show">Check Schedule</button>
             </div>
 
-            <!-- RIGHT SIDE -->
-            <div class="right-panel">
+            <!-- ===== TASK SECTION ===== -->
+            <div class="task-section" id="taskSection">
 
-                <h2>Check Who Is Free</h2>
-
-                <!-- 24 Hour Instruction -->
-                <p style="font-size:14px; margin-bottom:12px; font-weight:500;">
-                    Please enter time in 24-hour format (HH:MM). Example: 14:30 for 2:30 PM.
-                </p>
-
-                <div class="input-group">
-                    <label for="rangeDay">Day</label>
-                    <select id="rangeDay" class="modern-select">
-                        <option value="" disabled selected>Select day...</option>
-                        <option value="Monday">Monday</option>
-                        <option value="Tuesday">Tuesday</option>
-                        <option value="Wednesday">Wednesday</option>
-                        <option value="Thursday">Thursday</option>
-                        <option value="Friday">Friday</option>
-                        <option value="Saturday">Saturday</option>
-                    </select>
+                <!-- CC view -->
+                <div id="ccTaskHeader" style="display:none;">
+                    <h2>📋 Assigned Tasks</h2>
+                    <p>Tasks you have assigned to OCs</p>
+                    <div class="task-tabs">
+                        <button class="task-tab active" onclick="filterCCTasks('all', this)">All</button>
+                        <button class="task-tab" onclick="filterCCTasks('pending', this)">Pending</button>
+                        <button class="task-tab" onclick="filterCCTasks('completed', this)">Completed</button>
+                    </div>
+                    <div id="ccTaskList"></div>
                 </div>
 
-                <div class="input-group">
-                    <label for="startTime">Start Time</label>
-                    <input type="time" id="startTime" class="modern-select">
+                <!-- OC view -->
+                <div id="ocTaskHeader" style="display:none;">
+                    <h2>📋 My Tasks</h2>
+                    <p>Tasks assigned to you by CC members</p>
+                    <div class="task-tabs">
+                        <button class="task-tab active" onclick="filterOCTasks('all', this)">All</button>
+                        <button class="task-tab" onclick="filterOCTasks('pending', this)">Pending</button>
+                        <button class="task-tab" onclick="filterOCTasks('completed', this)">Completed</button>
+                    </div>
+                    <div id="ocTaskList"></div>
                 </div>
-
-                <div class="input-group">
-                    <label for="endTime">End Time</label>
-                    <input type="time" id="endTime" class="modern-select">
-                </div>
-
-                <button onclick="showFreeOCsRange()" class="btn-show">
-                    Check Availability
-                </button>
 
             </div>
 
         </div>
     </div>
 
+    <!-- TIMETABLE POPUP -->
     <div id="popupModal" class="popup-overlay">
         <div class="popup-content">
-            <span onclick="closePopup()">×</span>
+            <span class="close-btn" onclick="closePopup()">×</span>
             <div id="popupBody"></div>
         </div>
     </div>
 
+    <!-- TASK ASSIGNMENT MODAL -->
+    <div id="taskModalOverlay" class="task-modal-overlay">
+        <div class="task-modal">
+            <h2>✦ Allot Work</h2>
+            <p>Find available OCs (Organising Committee) and assign tasks</p>
+
+            <!-- Day & time range to find free OCs -->
+            <div class="modal-row">
+                <div class="input-group">
+                    <label for="modalDay">Day</label>
+                    <select id="modalDay" onchange="findFreeOCs()">
+                        <option value="" disabled selected>Select day...</option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="modalStart">Start Time</label>
+                    <input type="time" id="modalStart" onchange="findFreeOCs()">
+                </div>
+                <div class="input-group">
+                    <label for="modalEnd">End Time</label>
+                    <input type="time" id="modalEnd" onchange="findFreeOCs()">
+                </div>
+            </div>
+
+            <!-- Available OCs with checkboxes -->
+            <div id="freeOCsList"></div>
+
+            <!-- Selected OCs tags -->
+            <div id="selectedOCTags" class="selected-tags"></div>
+
+            <!-- Task details -->
+            <div class="input-group" style="margin-top: 16px;">
+                <label for="taskTitle">Task Title</label>
+                <input type="text" id="taskTitle" placeholder="Short task name, e.g. 'Design poster for event'"
+                    autocomplete="off">
+            </div>
+
+            <div class="input-group">
+                <label for="taskDescription">Task Description</label>
+                <textarea id="taskDescription" placeholder="Detailed instructions, links, notes..." rows="3"></textarea>
+            </div>
+
+            <div class="modal-row">
+                <div class="input-group">
+                    <label for="taskDeadlineDate">Deadline Date</label>
+                    <input type="date" id="taskDeadlineDate">
+                </div>
+                <div class="input-group">
+                    <label for="taskDeadlineTime">Deadline Time</label>
+                    <input type="time" id="taskDeadlineTime">
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeTaskModal()">Cancel</button>
+                <button class="btn-assign" onclick="assignTask()">Assign Task</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="data/timetable.js"></script>
     <script src="js/script.js"></script>
 
 </body>
+
 </html>
