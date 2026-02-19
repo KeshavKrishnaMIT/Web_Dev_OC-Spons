@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,149 +9,305 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
-        .auth-footer {
-            margin-top: 18px;
+        .role-toggle {
+            display: flex;
+            gap: 0;
+            margin-bottom: 24px;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid rgba(233, 226, 208, 0.15);
+        }
+
+        .role-toggle label {
+            flex: 1;
             text-align: center;
-            font-size: 14px;
+            padding: 14px 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #a19d91;
+            background: var(--input-bg);
+            transition: all 0.3s ease;
+            user-select: none;
+            line-height: 1.4;
         }
 
-        .auth-footer a {
-            color: #00e6d0;
+        .role-toggle input[type="radio"] {
+            display: none;
+        }
+
+        .role-toggle input[type="radio"]:checked + label {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 18px rgba(0, 106, 106, 0.35);
+        }
+
+        .role-label-text {
+            display: block;
+            font-size: 11px;
             font-weight: 700;
-            text-decoration: none;
-            margin-left: 6px;
-            transition: 0.3s;
+            color: var(--accent);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .auth-footer a:hover {
-            color: #d4af37;
-            text-decoration: underline;
+        /* Login container constrained width */
+        .login-container {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .role-toggle label {
+                padding: 12px 8px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="background-circles"></div>
+    <div class="background-circles"></div>
 
-<div class="container">
-    <div class="box">
+    <div class="container">
+        <div class="box">
+            <div class="login-container">
 
-        <header>
-            <h2 id="authTitle">System Login</h2>
-            <p id="authDesc">Enter details to access your dashboard</p>
-        </header>
+                <header>
+                    <h2 id="authTitle">System Login</h2>
+                    <p id="authDesc">Enter details to access your dashboard</p>
+                </header>
 
-        <div class="input-group">
-            <label>Username</label>
-            <input type="text" id="user" placeholder="Username" autocomplete="off">
-        </div>
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="user" placeholder="Username" autocomplete="off">
+                </div>
 
-        <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="pass" placeholder="Password" autocomplete="new-password">
-        </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="pass" placeholder="Password" autocomplete="new-password">
+                </div>
 
-        <!-- LOGIN -->
-        <div id="loginActions">
-            <button onclick="handleLogin()" class="btn-show">Login</button>
-            <div class="auth-footer">
-                New user?
-                <a href="#" onclick="toggleAuth(true)">Create Account</a>
+                <!-- ROLE SELECTION (shown during register) -->
+                <div id="roleGroup" style="display: none;">
+                    <span class="role-label-text">Select your role</span>
+                    <div class="role-toggle">
+                        <input type="radio" name="role" id="roleOC" value="oc" checked>
+                        <label for="roleOC">🎓 OC<br><small style="opacity:0.7;">(Organising Committee)</small></label>
+                        <input type="radio" name="role" id="roleCC" value="cc">
+                        <label for="roleCC">⭐ CC<br><small style="opacity:0.7;">(Core Committee)</small></label>
+                    </div>
+                </div>
+
+                <!-- CC AUTH KEY (shown during register when CC role selected) -->
+                <div id="ccKeyGroup" class="input-group" style="display: none;">
+                    <label>CC Authentication Key</label>
+                    <input type="password" id="ccAuthKey" placeholder="Enter the CC secret key" autocomplete="off">
+                </div>
+
+                <!-- OC NAME SELECTION (shown during register when OC role selected) -->
+                <div id="ocNameGroup" class="input-group" style="display: none;">
+                    <label>Your Name (from timetable)</label>
+                    <select id="ocNameSelect">
+                        <option value="" disabled selected>Select your name...</option>
+                    </select>
+                </div>
+
+                <!-- LOGIN -->
+                <div id="loginActions">
+                    <button onclick="handleLogin()" class="btn-show">Login</button>
+                    <div class="auth-footer">
+                        New user?
+                        <a href="#" onclick="toggleAuth(true)">Create Account</a>
+                    </div>
+                </div>
+
+                <!-- REGISTER -->
+                <div id="registerActions" style="display: none;">
+                    <button onclick="handleRegister()" class="btn-show" style="background: #4f46e5;">
+                        Register Account
+                    </button>
+                    <div class="auth-footer">
+                        Already registered?
+                        <a href="#" onclick="toggleAuth(false)">Back to Login</a>
+                    </div>
+                </div>
+
+                <p id="authMsg"
+                    style="font-size: 13px; margin-top: 15px; text-align: center; min-height: 15px; font-weight: 600;">
+                </p>
+
             </div>
         </div>
-
-        <!-- REGISTER -->
-        <div id="registerActions" style="display: none;">
-            <button onclick="handleRegister()" class="btn-show" style="background: #4f46e5;">
-                Register Account
-            </button>
-            <div class="auth-footer">
-                Already registered?
-                <a href="#" onclick="toggleAuth(false)">Back to Login</a>
-            </div>
-        </div>
-
-        <p id="authMsg"
-           style="font-size: 13px; margin-top: 15px; text-align: center; min-height: 15px; font-weight: 600;">
-        </p>
-
     </div>
-</div>
 
-<script>
+    <script src="data/timetable.js"></script>
+    <script src="data/config.js"></script>
+    <script>
 
-    // Auto redirect if already logged in
-    if (sessionStorage.getItem('isLoggedIn') === 'true') {
-        window.location.href = "index.html";
-    }
-
-    function toggleAuth(isRegistering) {
-        const title = document.getElementById('authTitle');
-        const desc = document.getElementById('authDesc');
-        const loginBox = document.getElementById('loginActions');
-        const registerBox = document.getElementById('registerActions');
-        const msg = document.getElementById('authMsg');
-
-        msg.innerText = "";
-
-        if (isRegistering) {
-            title.innerText = "Create Account";
-            desc.innerText = "Credentials will be saved in this browser only";
-            loginBox.style.display = "none";
-            registerBox.style.display = "block";
-        } else {
-            title.innerText = "System Login";
-            desc.innerText = "Enter details to access your dashboard";
-            loginBox.style.display = "block";
-            registerBox.style.display = "none";
-        }
-    }
-
-    function handleRegister() {
-        const u = document.getElementById('user').value.trim();
-        const p = document.getElementById('pass').value.trim();
-        const msg = document.getElementById('authMsg');
-
-        if (!u || !p) {
-            msg.innerText = "Please fill in all fields.";
-            msg.style.color = "#ef4444";
-            return;
-        }
-
-        localStorage.setItem('oc_username', u);
-        localStorage.setItem('oc_password', p);
-
-        msg.innerText = "Registration successful. Now login.";
-        msg.style.color = "#4ade80";
-
-        document.getElementById('pass').value = "";
-    }
-
-    function handleLogin() {
-        const u = document.getElementById('user').value.trim();
-        const p = document.getElementById('pass').value.trim();
-        const storedU = localStorage.getItem('oc_username');
-        const storedP = localStorage.getItem('oc_password');
-        const msg = document.getElementById('authMsg');
-
-        if (!u || !p) {
-            msg.innerText = "Please enter username and password.";
-            msg.style.color = "#ef4444";
-            return;
-        }
-
-        if (u === storedU && p === storedP) {
-            sessionStorage.setItem('isLoggedIn', 'true');
+        // Auto redirect if already logged in
+        if (sessionStorage.getItem('isLoggedIn') === 'true') {
             window.location.href = "index.html";
-        } else {
-            msg.innerText = "Invalid credentials. Please register first.";
-            msg.style.color = "#ef4444";
         }
-    }
 
-</script>
+        // ===== LOAD TIMETABLE DATA FOR OC NAME LIST =====
+        let timetableNames = typeof TIMETABLE_DATA !== 'undefined' ? Object.keys(TIMETABLE_DATA).sort() : [];
+
+        document.addEventListener('DOMContentLoaded', populateOCNameDropdown);
+
+        function populateOCNameDropdown() {
+            const select = document.getElementById('ocNameSelect');
+            if (!select) return;
+            select.innerHTML = '<option value="" disabled selected>Select your name...</option>';
+            timetableNames.forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                select.appendChild(opt);
+            });
+        }
+
+        // ===== MULTI-USER STORAGE =====
+        function getUsers() {
+            return JSON.parse(localStorage.getItem('oc_users') || '[]');
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem('oc_users', JSON.stringify(users));
+        }
+
+        function findUser(username) {
+            return getUsers().find(u => u.username === username);
+        }
+
+        // ===== ROLE TOGGLE =====
+        document.querySelectorAll('input[name="role"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                document.getElementById('ocNameGroup').style.display = this.value === 'oc' ? 'block' : 'none';
+                document.getElementById('ccKeyGroup').style.display = this.value === 'cc' ? 'block' : 'none';
+            });
+        });
+
+        function toggleAuth(isRegistering) {
+            const title = document.getElementById('authTitle');
+            const desc = document.getElementById('authDesc');
+            const loginBox = document.getElementById('loginActions');
+            const registerBox = document.getElementById('registerActions');
+            const roleGroup = document.getElementById('roleGroup');
+            const ocNameGroup = document.getElementById('ocNameGroup');
+            const ccKeyGroup = document.getElementById('ccKeyGroup');
+            const msg = document.getElementById('authMsg');
+
+            msg.innerText = "";
+
+            if (isRegistering) {
+                title.innerText = "Create Account";
+                desc.innerText = "Credentials will be saved in this browser only";
+                loginBox.style.display = "none";
+                registerBox.style.display = "block";
+                roleGroup.style.display = "block";
+                const selectedRole = document.querySelector('input[name="role"]:checked').value;
+                ocNameGroup.style.display = selectedRole === 'oc' ? 'block' : 'none';
+                ccKeyGroup.style.display = selectedRole === 'cc' ? 'block' : 'none';
+            } else {
+                title.innerText = "System Login";
+                desc.innerText = "Enter details to access your dashboard";
+                loginBox.style.display = "block";
+                registerBox.style.display = "none";
+                roleGroup.style.display = "none";
+                ocNameGroup.style.display = "none";
+                ccKeyGroup.style.display = "none";
+            }
+        }
+
+        function handleRegister() {
+            const u = document.getElementById('user').value.trim();
+            const p = document.getElementById('pass').value.trim();
+            const role = document.querySelector('input[name="role"]:checked').value;
+            const msg = document.getElementById('authMsg');
+
+            if (!u || !p) {
+                msg.innerText = "Please fill in all fields.";
+                msg.style.color = "#ef4444";
+                return;
+            }
+
+            // CC: validate auth key
+            if (role === 'cc') {
+                const enteredKey = document.getElementById('ccAuthKey').value.trim();
+                const validKey = typeof CC_AUTH_KEY !== 'undefined' ? CC_AUTH_KEY : '';
+                if (!enteredKey || enteredKey !== validKey) {
+                    msg.innerText = "Invalid CC authentication key. Contact admin.";
+                    msg.style.color = "#ef4444";
+                    return;
+                }
+            }
+
+            // OC: require timetable name
+            let timetableName = '';
+            if (role === 'oc') {
+                timetableName = document.getElementById('ocNameSelect').value;
+                if (!timetableName) {
+                    msg.innerText = "Please select your name from the timetable list.";
+                    msg.style.color = "#ef4444";
+                    return;
+                }
+                const existingUser = getUsers().find(usr => usr.timetableName === timetableName);
+                if (existingUser) {
+                    msg.innerText = "This OC name is already registered by another account.";
+                    msg.style.color = "#ef4444";
+                    return;
+                }
+            }
+
+            if (findUser(u)) {
+                msg.innerText = "Username already taken. Choose another.";
+                msg.style.color = "#ef4444";
+                return;
+            }
+
+            const users = getUsers();
+            users.push({ username: u, password: p, role: role, timetableName: timetableName });
+            saveUsers(users);
+
+            msg.innerText = "Registration successful! Now login.";
+            msg.style.color = "#4ade80";
+
+            document.getElementById('pass').value = "";
+            if (document.getElementById('ccAuthKey')) document.getElementById('ccAuthKey').value = "";
+        }
+
+        function handleLogin() {
+            const u = document.getElementById('user').value.trim();
+            const p = document.getElementById('pass').value.trim();
+            const msg = document.getElementById('authMsg');
+
+            if (!u || !p) {
+                msg.innerText = "Please enter username and password.";
+                msg.style.color = "#ef4444";
+                return;
+            }
+
+            const user = findUser(u);
+
+            if (user && user.password === p) {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                sessionStorage.setItem('loggedInUser', user.username);
+                sessionStorage.setItem('loggedInRole', user.role);
+                sessionStorage.setItem('loggedInTimetableName', user.timetableName || '');
+                window.location.href = "index.html";
+            } else {
+                msg.innerText = "Invalid credentials. Please register first.";
+                msg.style.color = "#ef4444";
+            }
+        }
+
+    </script>
 
 </body>
+
 </html>
+
 
